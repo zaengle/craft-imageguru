@@ -1,0 +1,60 @@
+{
+    "name": "zaengle/craft-imageguru",
+    "description": "Streamline your Image Transforms",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "image guru"
+    ],
+    "support": {
+        "docs": "https://github.com/zaengle/craft-imageguru/blob/master/README.md",
+        "issues": "https://github.com/zaengle/craft-imageguru/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zaengle Corp",
+            "homepage": "https://zaengle.com"
+        }
+    ],
+    "require-dev": {
+      "craftcms/cms": "^4.0.0",
+      "friendsofphp/php-cs-fixer": "^3.0",
+      "phpstan/phpstan": "^1.4",
+      "vlucas/phpdotenv": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "zaengle\\imageguru\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Image Guru",
+        "handle": "imageguru",
+        "developer": "Zaengle Corp",
+        "developerUrl": "https://zaengle.com",
+        "documentationUrl": "https://github.com/zaengle/craft-imageguru/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/zaengle/craft-imageguru/master/CHANGELOG.md",
+        "components": {
+            "transform": "zaengle\\imageguru\\services\\Transforms"
+        },
+        "class": "zaengle\\imageguru\\ImageGuru"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "phpstan": "vendor/bin/phpstan analyse",
+        "cs": "vendor/bin/php-cs-fixer fix src --allow-risky=yes"
+    },
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    }
+
+}
