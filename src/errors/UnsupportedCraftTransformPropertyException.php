@@ -24,7 +24,7 @@ class UnsupportedCraftTransformPropertyException extends Exception
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Unsupported Craft Transform property supplied';
     }

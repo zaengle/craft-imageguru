@@ -43,7 +43,7 @@ class ImageGuru extends Plugin
     /**
      * @var ImageGuru
      */
-    public static $plugin;
+    public static Plugin $plugin;
 
     // Public Properties
     // =========================================================================
@@ -74,17 +74,11 @@ class ImageGuru extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        $request = Craft::$app->getRequest();
-
-        // only use custom transformer for FE web requests
-        if ($request->getIsSiteRequest() && ! $request->getIsConsoleRequest()) {
-            $this->installEventHandlers();
-        }
-
         $this->setComponents([
-      'transformer' => ImageGuruTransformerService::class,
-    ]);
+            'transformer' => ImageGuruTransformerService::class,
+        ]);
 
+        $this->installEventHandlers();
 
         Craft::info('image-guru plugin loaded');
     }
@@ -101,12 +95,11 @@ class ImageGuru extends Plugin
                 Craft::debug('ImageTransforms::EVENT_REGISTER_IMAGE_TRANSFORMERS', __METHOD__);
 
                 /**
-                 * @var SettingsModel
+                 * @var SettingsModel $settings
                  */
                 $settings = $this->getSettings();
-
                 foreach ($settings->enabledTransformers as $transformerClass) {
-                    $event['types'][] = $transformerClass;
+                    $event->types[] = $transformerClass;
                 }
             }
         );

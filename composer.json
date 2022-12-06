@@ -22,7 +22,7 @@
         }
     ],
     "require-dev": {
-      "craftcms/cms": "^4.0.0",
+      "craftcms/cms": "^4.2.0",
       "friendsofphp/php-cs-fixer": "^3.0",
       "phpstan/phpstan": "^1.4",
       "vlucas/phpdotenv": "^3.0"
@@ -48,13 +48,15 @@
     "prefer-stable": true,
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse",
-        "cs": "vendor/bin/php-cs-fixer fix src --allow-risky=yes"
+        "fix-cs": "vendor/bin/php-cs-fixer fix src --allow-risky=yes"
     },
     "config": {
         "allow-plugins": {
             "yiisoft/yii2-composer": true,
             "craftcms/plugin-installer": true
         }
+    },
+    "require": {
+        "craftcms/aws-s3": "^2.0"
     }
-
 }

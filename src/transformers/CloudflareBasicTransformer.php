@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace zaengle\imageguru\transformers;
 
-use Craft;
 use craft\base\Component;
 use craft\base\imagetransforms\ImageTransformerInterface;
 use craft\elements\Asset;
+use craft\errors\ImageTransformException;
 use craft\helpers\ImageTransforms as TransformHelper;
 use craft\models\ImageTransform as CraftImageTransform;
 
@@ -91,29 +91,29 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
     /**
      * Returns the URL for an image transform
      *
-     * @param  Asset $image
-     * @param  CraftImageTransform|CloudflareImageTransform  $transform
-     * @param  bool $immediately Ignored/unused, declaration required for compatibility with default transformer
+     * @param Asset $asset
+     * @param CraftImageTransform|CloudflareImageTransform $imageTransform
+     * @param bool $immediately Ignored/unused, declaration required for compatibility with default transformer
      * @return string The transform URL
+     * @throws ImageTransformException
      */
-    public function getTransformUrl(Asset $image, CraftImageTransform|CloudflareImageTransform $transform, bool $immediately): string
+    public function getTransformUrl(Asset $asset, CraftImageTransform|CloudflareImageTransform $imageTransform, bool $immediately): string
     {
-        $transform = TransformHelper::normalizeTransform($transform);
-        $volumeSettings = ImageGuru::getInstance()->transformer->getTransformerSettingsByAsset($image);
+        $imageTransform = TransformHelper::normalizeTransform($imageTransform);
+        $volumeSettings = ImageGuru::getInstance()->transformer->getTransformerSettingsByAsset($asset);
 
-        $params = self::mergeParams($transform, $image, $volumeSettings);
+        $params = self::mergeParams($imageTransform, $asset, $volumeSettings);
 
-        return self::buildUrl($image, $volumeSettings->transformBaseUrl, $params);
+        return self::buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
     }
 
     /**
      * @inheritdoc
      *
      */
-    public function invalidateAssetTransforms(Asset $image): void
+    public function invalidateAssetTransforms(Asset $asset): void
     {
         // @todo clear the CF cache for this path
-        return;
     }
 
     // Static Methods
@@ -141,26 +141,13 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
      * @param  Asset $image
      * @return mixed param value
      */
-    public static function getNormalizedParamValue(string $paramName, mixed $value, Asset $image)
+    public static function getNormalizedParamValue(string $paramName, mixed $value, Asset $image): mixed
     {
-        switch ($paramName) {
-            case self::PARAM_MODE:
-                $result = self::normalizeMode($value);
-
-                break;
-
-            case self::PARAM_POSITION:
-                $result = self::normalizePosition($value, $image);
-
-                break;
-
-            default:
-                $result = $value;
-
-                break;
-        }
-
-        return $result;
+        return match ($paramName) {
+            self::PARAM_MODE => self::normalizeMode($value),
+            self::PARAM_POSITION => self::normalizePosition($value, $image),
+            default => $value,
+        };
     }
 
     /**
@@ -168,38 +155,36 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
      * @param  string $value Craft transform mode
      * @return string        Cloudflare transform mode
      */
-    public static function normalizeMode(string $value)
+    public static function normalizeMode(string $value): string
     {
-        $MODES_MAP = [
+        return match ($value) {
             'fit' => 'contain',
             // CF never changes the aspect ratio of the image, so 'cover' is the closest
             // we can get
             // @todo throw or warn when this is used in dev mode?
-            'stretch' => 'cover',
-            'crop' => 'cover',
-        ];
-
-        return $MODES_MAP[$value] ?? $value;
+            'stretch', self::MODE_CROP => 'cover',
+            default => $value,
+        };
     }
 
     /**
      * Normalise a Position value for Cloudflare
-     * @param  string $value Craft transform position
-     * @param  Asset $image
-     * @return string        Cloudflare transform postion
+     * @param string $value Craft transform position
+     * @param Asset $image
+     * @return string Cloudflare transform position
      */
-    public static function normalizePosition(string $value, Asset $image)
+    public static function normalizePosition(string $value, Asset $image): string
     {
         $namedPositions = [
-            "top-left"      => [ 'x' => 0,   'y' => 0],
-            "top-center"    => [ 'x' => 0.5, 'y' => 0],
-            "top-right"     => [ 'x' => 1.0, 'y' => 0],
-            "center-left"   => [ 'x' => 0,   'y' => 0.5],
+            "top-left" => [ 'x' => 0,   'y' => 0],
+            "top-center" => [ 'x' => 0.5, 'y' => 0],
+            "top-right" => [ 'x' => 1.0, 'y' => 0],
+            "center-left" => [ 'x' => 0,   'y' => 0.5],
             "center-center" => [ 'x' => 0.5, 'y' => 0.5],
-            "center-right"  => [ 'x' => 1.0, 'y' => 0.5],
-            "bottom-left"   => [ 'x' => 0,   'y' => 1.0],
+            "center-right" => [ 'x' => 1.0, 'y' => 0.5],
+            "bottom-left" => [ 'x' => 0,   'y' => 1.0],
             "bottom-center" => [ 'x' => 0.5, 'y' => 1.0],
-            "bottom-right"  => [ 'x' => 1.0, 'y' => 1.0],
+            "bottom-right" => [ 'x' => 1.0, 'y' => 1.0],
         ];
 
         if ($image->hasFocalPoint) {
@@ -232,8 +217,9 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
     /**
      * Combine the params from the transform with the defaults + enforced params from the plugin settings
      * for this asset's volume
-     * @param  CloudflareImageTransform|CraftImageTransform $transform
-     * @param  VolumeTransformSettings  $volumeSettings
+     * @param CloudflareImageTransform|CraftImageTransform $transform
+     * @param Asset $image
+     * @param VolumeTransformSettings $volumeSettings
      * @return array associative array of param / value pairs
      */
     protected static function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
@@ -247,7 +233,8 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
 
     /**
      * Normalize / map the param names + values to work with CF
-     * @param  CraftImageTransform|CloudflareImageTransform $transform
+     * @param CraftImageTransform|CloudflareImageTransform $transform
+     * @param Asset $image
      * @return array normalized param / value pairs
      */
     protected static function normalizeParams(CraftImageTransform|CloudflareImageTransform $transform, Asset $image): array
@@ -273,7 +260,7 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
     }
 
     /**
-     * Assemble the URL form the transfomr
+     * Assemble the URL form the transform
      * @param  Asset  $image
      * @param  string $baseUrl base url + path excluding the CF /cdn-cgi/image/ segment
      * @param  array  $transformParams normalized param / value pairs
@@ -316,7 +303,7 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
         return join(
             ',',
             array_map(
-                fn ($key) => "${key}={$params[$key]}",
+                fn ($key) => "$key=$params[$key]",
                 array_keys($params),
             )
         );

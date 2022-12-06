@@ -19,7 +19,6 @@ use craft\imagetransforms\ImageTransformer;
 use craft\models\ImageTransform;
 use craft\models\Volume;
 
-use zaengle\imageguru\errors\NotAnImageException;
 use zaengle\imageguru\ImageGuru;
 use zaengle\imageguru\models\Settings as SettingsModel;
 use zaengle\imageguru\models\VolumeTransformSettings as VolumeTransformSettingsModel;
@@ -41,7 +40,7 @@ class Transformer extends Component
         parent::init();
 
         /**
-         * @var SettingsModel
+         * @var SettingsModel $settings
          */
         $settings = ImageGuru::getInstance()->getSettings();
 
@@ -56,6 +55,7 @@ class Transformer extends Component
         return $this->getTransformerSettingsByAssetVolume($asset->volume);
     }
 
+    /** @noinspection PhpMultipleClassDeclarationsInspection */
     public function getTransformerSettingsByAssetVolume(Volume $volume): VolumeTransformSettingsModel
     {
         $knownVolumes = self::$settings->volumes;
@@ -65,7 +65,7 @@ class Transformer extends Component
                       ?? $knownVolumes;
 
         if (empty($volumeSettings)) {
-            // fall back to native transfomer if no config found
+            // fall back to native transformer if no config found
             Craft::warning('[image-guru] No Image Transformer settings found');
 
             $volumeSettings = [
@@ -84,18 +84,12 @@ class Transformer extends Component
      * @see https://developers.cloudflare.com/images/image-resizing/url-format/
      *
      * @todo incomplete
-     * @param  string $asset      Image Asset or Image Path
-     * @param  array  $transform Transform defintion array literal
+     * @param Asset|string $asset Image Asset or Image Path
+     * @param array|ImageTransform $transform Transform definition array literal
      * @return string Transform URL
-
      */
-    public function transform(Asset|string $asset, array|ImageTransform $transform, array $additionalOptions = []): string
+    public function transform(Asset|string $asset, array|ImageTransform $transform): string
     {
-        $this->preflight($asset);
-
-        /**
-         * @var ImageTransformer
-         */
         $transformer = $this->getTransformer($asset);
 
         return $transformer->getTransformUrl($asset, $transform, false);
@@ -103,27 +97,13 @@ class Transformer extends Component
 
     /**
      * Get an instance of the transformer for this image (based on volume settings)
-     * @param  string $asset
+     * @param Asset $asset
      * @return ImageTransformer
      */
-    protected function getTransformer(Asset|string $asset): ImageTransformer
+    protected function getTransformer(Asset $asset): ImageTransformer
     {
-        /**
-         * @var VolumeTransformSettingsModel
-         */
         $settings = $this->getTransformerSettingsByAsset($asset);
 
         return new $settings->transformer();
-    }
-
-    protected function preflight(Asset|string $asset): bool
-    {
-        if ($asset instanceof Asset) {
-            if ($asset->kind != Asset::KIND_IMAGE) {
-                throw new NotAnImageException();
-            }
-        }
-
-        return true;
     }
 }

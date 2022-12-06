@@ -22,14 +22,8 @@ class Settings extends Model
     // Public Properties
     // =========================================================================
 
-    /**
-     * @var array
-     */
-    public $enabledTransformers = [];
-    /**
-     * @var array
-     */
-    public $volumes = [];
+    public array $enabledTransformers = [];
+    public array $volumes = [];
 
     // Public Methods
     // =========================================================================
@@ -40,8 +34,8 @@ class Settings extends Model
     public function rules(): array
     {
         return [
-      ['enabledTransformers', []],
-      ['volumes', []],
-    ];
+            ['enabledTransformers', []],
+            ['volumes', []],
+        ];
     }
 }

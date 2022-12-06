@@ -22,21 +22,10 @@ class VolumeTransformSettings extends Model
     // Public Properties
     // =========================================================================
 
-    /**
-     * @var string
-     */
     public string $transformer;
-    /**
-     * @var string
-     */
     public string $transformBaseUrl = '/';
-    /**
-     * @var array
-     */
+    public ?string $urlSigningSecret = null;
     public array $defaultParams = [];
-    /**
-     * @var array
-     */
     public array $enforceParams = [];
 
     // Public Methods
@@ -48,7 +37,7 @@ class VolumeTransformSettings extends Model
     public function rules(): array
     {
         return [
-      [['transformer'], 'required'],
-    ];
+            [['transformer'], 'required'],
+        ];
     }
 }
