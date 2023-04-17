@@ -154,6 +154,7 @@ class AwsServerlessSharpTransformer extends Component implements ImageTransforme
         $edits = [];
 
         $format = self::getFormatName($image, $transform);
+        $edits['toFormat'] = $format;
         $edits[$format] = self::getFormatValues($format, $transform);
 
         foreach (self::MAP_TRANSFORM_RESIZE_ATTRIBUTES as $key => $value) {
