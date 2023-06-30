@@ -16,6 +16,7 @@ use craft\base\Component;
 use craft\base\imagetransforms\ImageTransformerInterface;
 use craft\elements\Asset;
 use craft\errors\ImageTransformException;
+use craft\helpers\App;
 use craft\helpers\ImageTransforms as TransformHelper;
 use craft\models\ImageTransform as CraftImageTransform;
 
@@ -268,15 +269,14 @@ class CloudflareBasicTransformer extends Component implements ImageTransformerIn
      */
     protected static function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string
     {
+        $folder = '';
+        if (property_exists($image->fs, 'subfolder')) {
+            $folder = App::parseEnv($image->fs->subfolder);
+        }
+        $key = ltrim($folder . $image->path, '/');
+
         $path = self::collapseSlashes(
-            join(
-                '/',
-                [
-          self::encodeParams($transformParams),
-          property_exists($image->fs, 'subfolder') ? $image->fs->subfolder : '',
-          $image->path,
-        ]
-            )
+            join( '/', [ self::encodeParams($transformParams), $key ])
         );
 
         return self::getBaseUrl($baseUrl) . $path;
