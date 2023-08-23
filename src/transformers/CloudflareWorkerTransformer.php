@@ -25,20 +25,15 @@ use zaengle\imageguru\models\CloudflareImageTransform;
 use zaengle\imageguru\models\VolumeTransformSettings;
 
 /**
- * CloudflareBasicTransformer transforms image assets using Cloudflare's Image Resizing service
+ * CloudflareBasicTransformer transforms image assets using Cloudflare's Image Resizing service via Cloudflare Workers
  *
  * @author Zaengle Corp. <hello@zaengle.com>
- * @since 1.0.0
- * @see https://developers.cloudflare.com/images/image-resizing/ CF service documentation
+ * @since 1.1
+ *
+ * @see https://developers.cloudflare.com/images/image-resizing/resize-with-workers
  */
-class CloudflareBasicTransformer extends BaseCloudflareTransformer
+class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements ImageTransformerInterface
 {
-    /**
-     * The 'special' segment to add to CF URLs to trigger parsing of transform params by CF
-     * image resizing
-     */
-    public const CF_PATH_PREFIX = '/cdn-cgi/image/';
-
     // Public Methods
     // =========================================================================
 
@@ -60,6 +55,19 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
 
         return self::buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
     }
+
+    /**
+     * @inheritdoc
+     *
+     */
+    public function invalidateAssetTransforms(Asset $asset): void
+    {
+        // @todo clear the CF cache for this path
+    }
+
+    // Static Methods
+    // =========================================================================
+
 
     /**
      * Normalise a Position value for Cloudflare
@@ -92,8 +100,32 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         return $result;
     }
 
+    // Protected Methods
+    // =========================================================================
+
     /**
-     * @inerhitdoc
+     * Combine the params from the transform with the defaults + enforced params from the plugin settings
+     * for this asset's volume
+     * @param CloudflareImageTransform|CraftImageTransform $transform
+     * @param Asset $image
+     * @param VolumeTransformSettings $volumeSettings
+     * @return array associative array of param / value pairs
+     */
+    public static function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
+    {
+        return array_merge(
+            $volumeSettings->defaultParams,
+            self::normalizeParams($transform, $image),
+            $volumeSettings->enforceParams
+        );
+    }
+
+    /**
+     * Assemble the URL form the transform
+     * @param  Asset  $image
+     * @param  string $baseUrl base url + path excluding the CF /cdn-cgi/image/ segment
+     * @param  array  $transformParams normalized param / value pairs
+     * @return string The completed transform URL
      */
     public static function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string
     {
@@ -101,38 +133,11 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         if (property_exists($image->fs, 'subfolder')) {
             $folder = App::parseEnv($image->fs->subfolder);
         }
-        $key = ltrim($folder . $image->path, '/');
+        $path = ltrim($folder . $image->path, '/');
 
-        $path = self::collapseSlashes(
-            join( '/', [ self::encodeParams($transformParams), $key ])
-        );
+        // @todo handle signed urls
 
-        return self::getBaseUrl($baseUrl) . $path;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getBaseUrl(string $baseUrl = '/'): string
-    {
-        return rtrim($baseUrl, '/') . self::CF_PATH_PREFIX;
-    }
-
-    /**
-     * Encode the URL params according to the CF image resizing format
-     * @param  array  $params param/value pairs
-     * @return string
-     * @see https://developers.cloudflare.com/images/image-resizing/url-format/
-     */
-    protected static function encodeParams(array $params): string
-    {
-        return join(
-            ',',
-            array_map(
-                fn ($key) => "$key=$params[$key]",
-                array_keys($params),
-            )
-        );
+        return rtrim($baseUrl, '/'). '/' . $path . '?' . http_build_query($transformParams);
     }
 
     /**
