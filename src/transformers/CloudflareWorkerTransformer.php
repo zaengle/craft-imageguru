@@ -53,6 +53,14 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
 
         $params = self::mergeParams($imageTransform, $asset, $volumeSettings);
 
+        if ($volumeSettings->getShouldSignUrls()) {
+            $params['verify'] = hash_hmac(
+                'sha256',
+                self::buildUrl($asset, '', $params),
+                $volumeSettings->urlSigningSecret,
+            );
+        }
+
         return self::buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
     }
 
@@ -135,7 +143,7 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
         }
         $path = ltrim($folder . $image->path, '/');
 
-        // @todo handle signed urls
+
 
         return rtrim($baseUrl, '/'). '/' . $path . '?' . http_build_query($transformParams);
     }

@@ -40,4 +40,8 @@ class VolumeTransformSettings extends Model
             [['transformer'], 'required'],
         ];
     }
+
+    public function getShouldSignUrls() {
+        return $this->urlSigningSecret ?? false;
+    }
 }

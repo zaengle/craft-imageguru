@@ -189,8 +189,8 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
     public static function normalizeParams(CraftImageTransform|CloudflareImageTransform $transform, Asset $image): array
     {
         $params = is_a($transform, CloudflareImageTransform::class)
-                ? self::CLOUDFLARE_TRANSFORM_PARAMS
-                : self::CRAFT_TRANSFORM_PARAMS;
+            ? self::CLOUDFLARE_TRANSFORM_PARAMS
+            : self::CRAFT_TRANSFORM_PARAMS;
 
         $result = [];
 
