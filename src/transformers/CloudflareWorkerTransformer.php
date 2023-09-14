@@ -51,17 +51,17 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
         $imageTransform = TransformHelper::normalizeTransform($imageTransform);
         $volumeSettings = ImageGuru::getInstance()->transformer->getTransformerSettingsByAsset($asset);
 
-        $params = self::mergeParams($imageTransform, $asset, $volumeSettings);
+        $params = $this->mergeParams($imageTransform, $asset, $volumeSettings);
 
         if ($volumeSettings->getShouldSignUrls()) {
             $params['verify'] = hash_hmac(
                 'sha256',
-                self::buildUrl($asset, '', $params),
+                $this->buildUrl($asset, '', $params),
                 $volumeSettings->urlSigningSecret,
             );
         }
 
-        return self::buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
+        return $this->buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
     }
 
     /**
@@ -76,41 +76,6 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
     // Static Methods
     // =========================================================================
 
-
-    /**
-     * Normalise a Position value for Cloudflare
-     * @param string $value Craft transform position
-     * @param Asset $image
-     * @return string Cloudflare transform position
-     */
-    public static function normalizePosition(string $value, Asset $image): string
-    {
-        $namedPositions = [
-            "top-left" => [ 'x' => 0,   'y' => 0],
-            "top-center" => [ 'x' => 0.5, 'y' => 0],
-            "top-right" => [ 'x' => 1.0, 'y' => 0],
-            "center-left" => [ 'x' => 0,   'y' => 0.5],
-            "center-center" => [ 'x' => 0.5, 'y' => 0.5],
-            "center-right" => [ 'x' => 1.0, 'y' => 0.5],
-            "bottom-left" => [ 'x' => 0,   'y' => 1.0],
-            "bottom-center" => [ 'x' => 0.5, 'y' => 1.0],
-            "bottom-right" => [ 'x' => 1.0, 'y' => 1.0],
-        ];
-
-        if ($image->hasFocalPoint) {
-            $result = self::positionToGravity($image->getFocalPoint());
-        } elseif ($named = $namedPositions[$value] ?? false) {
-            $result = self::positionToGravity($named);
-        } else {
-            $result = self::positionToGravity($namedPositions['center-center']);
-        }
-
-        return $result;
-    }
-
-    // Protected Methods
-    // =========================================================================
-
     /**
      * Combine the params from the transform with the defaults + enforced params from the plugin settings
      * for this asset's volume
@@ -119,11 +84,15 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
      * @param VolumeTransformSettings $volumeSettings
      * @return array associative array of param / value pairs
      */
-    public static function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
+    public function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
     {
+        $clonedTransform = clone $transform;
+        $clonedTransform->position = '';
+
         return array_merge(
             $volumeSettings->defaultParams,
-            self::normalizeParams($transform, $image),
+            $this->normalizePosition($transform->position, $image),
+            $this->normalizeParams($clonedTransform , $image),
             $volumeSettings->enforceParams
         );
     }
@@ -135,7 +104,7 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
      * @param  array  $transformParams normalized param / value pairs
      * @return string The completed transform URL
      */
-    public static function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string
+    public function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string
     {
         $folder = '';
         if (property_exists($image->fs, 'subfolder')) {
@@ -149,13 +118,13 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements I
     }
 
     /**
-     * Convert a Craft position assoc array to a Cloudflare gravity
-     * @param  array  $position [ x => float , y => float]
-     * @return string
-     * @see https://developers.cloudflare.com/images/image-resizing/url-format/#gravity
+     * @inheritDoc
      */
-    protected static function positionToGravity(array $position): string
+    protected function positionToGravity(array $position): mixed
     {
-        return $position['x'] . 'x' . $position['y'];
+        return [
+            'fp-x' => $position['x'],
+            'fp-y' => $position['y'],
+        ];
     }
 }

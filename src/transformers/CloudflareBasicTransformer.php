@@ -56,18 +56,18 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         $imageTransform = TransformHelper::normalizeTransform($imageTransform);
         $volumeSettings = ImageGuru::getInstance()->transformer->getTransformerSettingsByAsset($asset);
 
-        $params = self::mergeParams($imageTransform, $asset, $volumeSettings);
+        $params = $this->mergeParams($imageTransform, $asset, $volumeSettings);
 
-        return self::buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
+        return $this->buildUrl($asset, $volumeSettings->transformBaseUrl, $params);
     }
 
     /**
      * Normalise a Position value for Cloudflare
      * @param string $value Craft transform position
      * @param Asset $image
-     * @return string Cloudflare transform position
+     * @return mixed Cloudflare transform position
      */
-    public static function normalizePosition(string $value, Asset $image): string
+    public function normalizePosition(string $value, Asset $image): mixed
     {
         $namedPositions = [
             "top-left" => [ 'x' => 0,   'y' => 0],
@@ -82,11 +82,11 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         ];
 
         if ($image->hasFocalPoint) {
-            $result = self::positionToGravity($image->getFocalPoint());
+            $result = $this->positionToGravity($image->getFocalPoint());
         } elseif ($named = $namedPositions[$value] ?? false) {
-            $result = self::positionToGravity($named);
+            $result = $this->positionToGravity($named);
         } else {
-            $result = self::positionToGravity($namedPositions['center-center']);
+            $result = $this->positionToGravity($namedPositions['center-center']);
         }
 
         return $result;
@@ -95,7 +95,7 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
     /**
      * @inerhitdoc
      */
-    public static function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string
+    public function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string
     {
         $folder = '';
         if (property_exists($image->fs, 'subfolder')) {
@@ -103,17 +103,17 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         }
         $key = ltrim($folder . $image->path, '/');
 
-        $path = self::collapseSlashes(
-            join( '/', [ self::encodeParams($transformParams), $key ])
+        $path = $this->collapseSlashes(
+            join( '/', [ $this->encodeParams($transformParams), $key ])
         );
 
-        return self::getBaseUrl($baseUrl) . $path;
+        return $this->getBaseUrl($baseUrl) . $path;
     }
 
     /**
      * @inheritDoc
      */
-    public static function getBaseUrl(string $baseUrl = '/'): string
+    public function getBaseUrl(string $baseUrl = '/'): string
     {
         return rtrim($baseUrl, '/') . self::CF_PATH_PREFIX;
     }
@@ -124,7 +124,7 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
      * @return string
      * @see https://developers.cloudflare.com/images/image-resizing/url-format/
      */
-    protected static function encodeParams(array $params): string
+    protected function encodeParams(array $params): string
     {
         return join(
             ',',
@@ -141,7 +141,7 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
      * @return string
      * @see https://developers.cloudflare.com/images/image-resizing/url-format/#gravity
      */
-    protected static function positionToGravity(array $position): string
+    protected function positionToGravity(array $position): string
     {
         return $position['x'] . 'x' . $position['y'];
     }

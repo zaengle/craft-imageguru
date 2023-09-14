@@ -76,6 +76,23 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
     public const PARAM_POSITION = 'position';
     public const MODE_CROP = 'crop';
 
+    public const NAMED_POSITIONS = [
+        'top-left' => [ 'x' => 0,   'y' => 0],
+        'top-center' => [ 'x' => 0.5, 'y' => 0],
+        'top-right' => [ 'x' => 1.0, 'y' => 0],
+        'center-left' => [ 'x' => 0,   'y' => 0.5],
+        'center-center' => [ 'x' => 0.5, 'y' => 0.5],
+        'center-right' => [ 'x' => 1.0, 'y' => 0.5],
+        'bottom-left' => [ 'x' => 0,   'y' => 1.0],
+        'bottom-center' => [ 'x' => 0.5, 'y' => 1.0],
+        'bottom-right' => [ 'x' => 1.0, 'y' => 1.0],
+    ];
+
+    public const TRANSLATE_PARAMS = [
+        'mode' => 'fit',
+        'position' => 'gravity',
+    ];
+
     /**
      * @inheritdoc
      *
@@ -84,23 +101,14 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
     {
         // @todo clear the CF cache for this path
     }
-
-    // Static Methods
-    // =========================================================================
-
     /**
      * Normalize a param name
      * @param  string $key
      * @return string
      */
-    public static function getNormalizedParamName(string $key): string
+    public function getNormalizedParamName(string $key): string
     {
-        $TRANSLATE_PARAMS = [
-            'mode' => 'fit',
-            'position' => 'gravity',
-        ];
-
-        return in_array($key, array_keys($TRANSLATE_PARAMS)) ? $TRANSLATE_PARAMS[$key] : $key;
+        return in_array($key, array_keys(self::TRANSLATE_PARAMS)) ? self::TRANSLATE_PARAMS[$key] : $key;
     }
 
     /**
@@ -110,11 +118,11 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param  Asset $image
      * @return mixed param value
      */
-    public static function getNormalizedParamValue(string $paramName, mixed $value, Asset $image): mixed
+    public function getNormalizedParamValue(string $paramName, mixed $value, Asset $image): mixed
     {
         return match ($paramName) {
-            self::PARAM_MODE => self::normalizeMode($value),
-            self::PARAM_POSITION => self::normalizePosition($value, $image),
+            static::PARAM_MODE => $this->normalizeMode($value),
+            static::PARAM_POSITION => $this->normalizePosition($value, $image),
             default => $value,
         };
     }
@@ -124,7 +132,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param  string $value Craft transform mode
      * @return string        Cloudflare transform mode
      */
-    public static function normalizeMode(string $value): string
+    public function normalizeMode(string $value): string
     {
         return match ($value) {
             'fit' => 'contain',
@@ -140,11 +148,19 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * Normalise a Position value for Cloudflare
      * @param string $value Craft transform position
      * @param Asset $image
-     * @return string Cloudflare transform position
+     * @return mixed Cloudflare transform position
      */
-    public static function normalizePosition(string $value, Asset $image): string
+    public function normalizePosition(string $value, Asset $image): mixed
     {
-        return $value;
+        if ($image->hasFocalPoint) {
+            $result = $this->positionToGravity($image->getFocalPoint());
+        } elseif ($named = self::NAMED_POSITIONS[$value] ?? false) {
+            $result = $this->positionToGravity($named);
+        } else {
+            $result = $this->positionToGravity( self::NAMED_POSITIONS['center-center']);
+        }
+
+        return $result;
     }
 
     /**
@@ -171,11 +187,11 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param VolumeTransformSettings $volumeSettings
      * @return array associative array of param / value pairs
      */
-    public static function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
+    public function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
     {
         return array_merge(
             $volumeSettings->defaultParams,
-            self::normalizeParams($transform, $image),
+            $this->normalizeParams($transform, $image),
             $volumeSettings->enforceParams
         );
     }
@@ -186,7 +202,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param Asset $image
      * @return array normalized param / value pairs
      */
-    public static function normalizeParams(CraftImageTransform|CloudflareImageTransform $transform, Asset $image): array
+    public function normalizeParams(CraftImageTransform|CloudflareImageTransform $transform, Asset $image): array
     {
         $params = is_a($transform, CloudflareImageTransform::class)
             ? self::CLOUDFLARE_TRANSFORM_PARAMS
@@ -196,8 +212,8 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
 
         foreach ($params as $paramName) {
             if ($transform->$paramName ?? false) {
-                $normalizedValue = self::getNormalizedParamValue($paramName, $transform->$paramName, $image);
-                $normalizedKey = self::getNormalizedParamName($paramName);
+                $normalizedValue = $this->getNormalizedParamValue($paramName, $transform->$paramName, $image);
+                $normalizedKey = $this->getNormalizedParamName($paramName);
 
                 if (in_array($normalizedKey, self::CLOUDFLARE_TRANSFORM_PARAMS)) {
                     $result[$normalizedKey] = $normalizedValue;
@@ -215,7 +231,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param  array  $transformParams normalized param / value pairs
      * @return string The completed transform URL
      */
-    public abstract static function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string;
+    public abstract function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string;
 
 
     /**
@@ -223,7 +239,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param  string $baseUrl
      * @return string
      */
-    public static function getBaseUrl(string $baseUrl = '/'): string
+    public function getBaseUrl(string $baseUrl = '/'): string
     {
         return rtrim($baseUrl, '/') . '/';
     }
@@ -234,8 +250,10 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param  string $str
      * @return string
      */
-    public static function collapseSlashes(string $str): string
+    public function collapseSlashes(string $str): string
     {
         return ltrim(preg_replace('#/{2,}#', '/', $str), '/');
     }
+
+    protected abstract function positionToGravity(array $position): mixed;
 }
