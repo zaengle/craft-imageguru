@@ -32,7 +32,7 @@ use zaengle\imageguru\models\VolumeTransformSettings;
  *
  * @see https://developers.cloudflare.com/images/image-resizing/resize-with-workers
  */
-class CloudflareWorkerTransformer extends BaseCloudflareTransformer implements ImageTransformerInterface
+class CloudflareWorkerTransformer extends BaseCloudflareTransformer
 {
     // Public Methods
     // =========================================================================

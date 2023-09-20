@@ -1,0 +1,13 @@
+name = "image-resizing"
+main = "src/index.ts"
+compatibility_date = "2022-11-30"
+usage_model = "bundled"
+workers_dev = false
+routes = [
+  { pattern = "<CF_HOSTED_DOMAIN>/resize*", zone_name = "<CF_HOSTED_DOMAIN>" }
+]
+[vars]
+ORIGIN="<YOUR UPSTREAM ORIGIN IMAGE SOURCE>"
+SHARED_SIGNING_SECRET="<YOUR SECRET HERE>"
+VERIFY_REQUESTS=true
+ROUTE="/resize"
