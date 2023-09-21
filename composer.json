@@ -50,6 +50,7 @@
     "prefer-stable": true,
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse",
+        "check-cs": "ecs check --ansi",
         "fix-cs": "vendor/bin/php-cs-fixer fix src --allow-risky=yes"
     },
     "config": {
