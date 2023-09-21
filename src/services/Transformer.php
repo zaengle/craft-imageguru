@@ -33,7 +33,7 @@ class Transformer extends Component
 {
     public const SHARED_SETTINGS_KEY = '*';
 
-    public static SettingsModel $settings;
+    public SettingsModel $settings;
 
     public function init(): void
     {
@@ -44,7 +44,7 @@ class Transformer extends Component
          */
         $settings = ImageGuru::getInstance()->getSettings();
 
-        self::$settings = $settings;
+        $this->settings = $settings;
     }
 
     // Public Methods
@@ -58,7 +58,7 @@ class Transformer extends Component
     /** @noinspection PhpMultipleClassDeclarationsInspection */
     public function getTransformerSettingsByAssetVolume(Volume $volume): VolumeTransformSettingsModel
     {
-        $knownVolumes = self::$settings->volumes;
+        $knownVolumes = $this->settings->volumes;
 
         $volumeSettings = $knownVolumes[$volume->handle]
                       ?? $knownVolumes[self::SHARED_SETTINGS_KEY]
@@ -79,20 +79,13 @@ class Transformer extends Component
     /**
      * Generate a transform for an image, without using the Craft Transform API
      *
-     * Allows you to use the full range of params in the CF image resizing API
-     *
-     * @see https://developers.cloudflare.com/images/image-resizing/url-format/
-     *
-     * @todo incomplete
      * @param Asset|string $asset Image Asset or Image Path
      * @param array|ImageTransform $transform Transform definition array literal
      * @return string Transform URL
      */
     public function transform(Asset|string $asset, array|ImageTransform $transform): string
     {
-        $transformer = $this->getTransformer($asset);
-
-        return $transformer->getTransformUrl($asset, $transform, false);
+        return $this->getTransformer($asset)->getTransformUrl($asset, $transform, false);
     }
 
     /**

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace zaengle\imageguru\transformers;
 
-use craft\base\imagetransforms\ImageTransformerInterface;
 use craft\elements\Asset;
 use craft\errors\ImageTransformException;
 use craft\helpers\App;
@@ -21,8 +20,6 @@ use craft\models\ImageTransform as CraftImageTransform;
 
 use zaengle\imageguru\base\BaseCloudflareTransformer;
 use zaengle\imageguru\ImageGuru;
-use zaengle\imageguru\models\CloudflareImageTransform;
-use zaengle\imageguru\models\VolumeTransformSettings;
 
 /**
  * CloudflareBasicTransformer transforms image assets using Cloudflare's Image Resizing service
@@ -46,12 +43,12 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
      * Returns the URL for an image transform
      *
      * @param Asset $asset
-     * @param CraftImageTransform|CloudflareImageTransform $imageTransform
+     * @param CraftImageTransform $imageTransform
      * @param bool $immediately Ignored/unused, declaration required for compatibility with default transformer
      * @return string The transform URL
      * @throws ImageTransformException
      */
-    public function getTransformUrl(Asset $asset, CraftImageTransform|CloudflareImageTransform $imageTransform, bool $immediately): string
+    public function getTransformUrl(Asset $asset, CraftImageTransform $imageTransform, bool $immediately): string
     {
         $imageTransform = TransformHelper::normalizeTransform($imageTransform);
         $volumeSettings = ImageGuru::getInstance()->transformer->getTransformerSettingsByAsset($asset);
@@ -63,11 +60,12 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
 
     /**
      * Normalise a Position value for Cloudflare
+     *
      * @param string $value Craft transform position
      * @param Asset $image
-     * @return mixed Cloudflare transform position
+     * @return string Cloudflare transform position
      */
-    public function normalizePosition(string $value, Asset $image): mixed
+    public function normalizePosition(string $value, Asset $image): string
     {
         $namedPositions = [
             "top-left" => [ 'x' => 0,   'y' => 0],
@@ -104,7 +102,7 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         $key = ltrim($folder . $image->path, '/');
 
         $path = $this->collapseSlashes(
-            join( '/', [ $this->encodeParams($transformParams), $key ])
+            join('/', [ $this->encodeParams($transformParams), $key ])
         );
 
         return $this->getBaseUrl($baseUrl) . $path;

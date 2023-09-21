@@ -101,6 +101,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
     {
         // @todo clear the CF cache for this path
     }
+
     /**
      * Normalize a param name
      * @param  string $key
@@ -157,7 +158,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
         } elseif ($named = self::NAMED_POSITIONS[$value] ?? false) {
             $result = $this->positionToGravity($named);
         } else {
-            $result = $this->positionToGravity( self::NAMED_POSITIONS['center-center']);
+            $result = $this->positionToGravity(self::NAMED_POSITIONS['center-center']);
         }
 
         return $result;
@@ -231,8 +232,7 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
      * @param  array  $transformParams normalized param / value pairs
      * @return string The completed transform URL
      */
-    public abstract function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string;
-
+    abstract public function buildUrl(Asset $image, string $baseUrl, array $transformParams = []): string;
 
     /**
      * Adds the CF image resizing segment to the base url
@@ -244,7 +244,6 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
         return rtrim($baseUrl, '/') . '/';
     }
 
-
     /**
      * Ensure no repeated slashes
      * @param  string $str
@@ -255,5 +254,5 @@ abstract class BaseCloudflareTransformer extends Component implements ImageTrans
         return ltrim(preg_replace('#/{2,}#', '/', $str), '/');
     }
 
-    protected abstract function positionToGravity(array $position): mixed;
+    abstract protected function positionToGravity(array $position): mixed;
 }
