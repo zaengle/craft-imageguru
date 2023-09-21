@@ -64,7 +64,7 @@ return [
     ],
   ],
   /**
-   * This is a mulit-environment config, so you can optionally specify a different transformer per environment
+   * This is a multienvironment config, so you can optionally specify a different transformer per environment
    * 
    * e.g just use the Craft default transformer for local dev
    */ 
