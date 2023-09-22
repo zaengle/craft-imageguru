@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/zaengle/craft-imageguru/issues"
   },
-  "homepage": "https://github.com/zaengle/craft-imageguru#readme"
+  "homepage": "https://github.com/zaengle/craft-imageguru#readme",
+  "devDependencies": {
+    "vitepress": "^1.0.0-rc.15"
+  }
 }
