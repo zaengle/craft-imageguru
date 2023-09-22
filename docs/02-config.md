@@ -1,8 +1,6 @@
 # Configuring the plugin
 
-ImageGuru is entirely configured via its config file, a starter version of which will be created at `config/imageguru.php` as part of the plugin install command.
-
-Out of the box, ImageGuru makes no changes to your image transforms until you configure it.
+Out of the box, ImageGuru makes no changes to your image transforms until you configure it. ImageGuru is entirely configured via its config file, a starter version of which will be automatically created at `config/imageguru.php` as part of the plugin's install command.
 
 ## Getting started
 
@@ -35,10 +33,10 @@ return [
 `VolumeTransformSettings` model supports the following properties:
 
 - `string transformer` - the escaped, namespaced classname of the transformer to use for this volume, and which must match an `enabledTransformer`.
-- `string transformBaseUrl` - the base URL to use for transforms (e.g. CDN hostname), defaults to `/
-- `?string urlSigningSecret` - a secret key to use for signing transform URLs, if required by the transformer. If not set, no signing will be applied.
-- `?array defaultParams` - an array of default parameters to apply to all transforms for this volume. These will be merged with any params passed to the `getTransformUrl` method, but can be overriden on a per-transform basis.
-- `?array enforceParams` - an array of parameters that will be enforced on all transforms for this volume. These will be merged with any params passed to the `transformUrl` method and will override any params passed to the transformer's `getTransformUrl()` method.
+- `string transformBaseUrl` - the base URL to use for transforms (e.g. CDN hostname), defaults to `/`.
+- `?string urlSigningSecret` - a secret key to use for signing transform URLs, if supported/required by the transformer. If not set, URLs will not be signed.
+- `?array defaultParams` - an array of default parameters to apply to all transforms for this volume. These will be merged with any params passed to the `getTransformUrl` method, but can be overridden on a per-transform basis.
+- `?array enforceParams` - an array of parameters that will be enforced on all transforms for this volume. These will be merged with any params passed to the `transformUrl` method and will override the values of the same param when passed to the transformer's `getTransformUrl()` method.
 
 Example:
 
