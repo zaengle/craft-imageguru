@@ -41,7 +41,8 @@ class VolumeTransformSettings extends Model
         ];
     }
 
-    public function getShouldSignUrls() {
-        return $this->urlSigningSecret ?? false;
+    public function getShouldSignUrls(): bool
+    {
+        return (bool) ($this->urlSigningSecret ?? false);
     }
 }

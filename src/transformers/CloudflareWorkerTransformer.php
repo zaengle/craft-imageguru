@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace zaengle\imageguru\transformers;
 
-use craft\base\imagetransforms\ImageTransformerInterface;
 use craft\elements\Asset;
 use craft\errors\ImageTransformException;
 use craft\helpers\App;
@@ -87,12 +86,11 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer
     public function mergeParams(CloudflareImageTransform|CraftImageTransform $transform, Asset $image, VolumeTransformSettings $volumeSettings): array
     {
         $clonedTransform = clone $transform;
-        $clonedTransform->position = '';
 
         return array_merge(
             $volumeSettings->defaultParams,
             $this->normalizePosition($transform->position, $image),
-            $this->normalizeParams($clonedTransform , $image),
+            $this->normalizeParams($clonedTransform, $image),
             $volumeSettings->enforceParams
         );
     }
