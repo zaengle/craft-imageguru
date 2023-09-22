@@ -91,7 +91,7 @@ class ImageGuru extends Plugin
         Event::on(
             CraftImageTransformsService::class,
             CraftImageTransformsService::EVENT_REGISTER_IMAGE_TRANSFORMERS,
-            function (RegisterComponentTypesEvent $event) {
+            function(RegisterComponentTypesEvent $event) {
                 Craft::debug('ImageTransforms::EVENT_REGISTER_IMAGE_TRANSFORMERS', __METHOD__);
 
                 /**
@@ -108,7 +108,7 @@ class ImageGuru extends Plugin
         Event::on(
             Asset::class,
             Asset::EVENT_BEFORE_GENERATE_TRANSFORM,
-            function (GenerateTransformEvent $event) {
+            function(GenerateTransformEvent $event) {
                 Craft::debug('Asset::EVENT_BEFORE_GENERATE_TRANSFORM', __METHOD__);
                 $transformerSettings = $this->transformer->getTransformerSettingsByAsset($event->asset);
 
@@ -124,10 +124,10 @@ class ImageGuru extends Plugin
      */
     protected function afterInstall(): void
     {
-        $configSource = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR. 'config.example.php';
+        $configSource = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config.example.php';
         $configTarget = \Craft::$app->getConfig()->configDir . DIRECTORY_SEPARATOR . 'imageguru.php';
 
-        if (! file_exists($configTarget)) {
+        if (!file_exists($configTarget)) {
             copy($configSource, $configTarget);
         }
     }

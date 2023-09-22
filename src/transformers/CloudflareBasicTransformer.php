@@ -127,7 +127,7 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         return join(
             ',',
             array_map(
-                fn ($key) => "$key=$params[$key]",
+                fn($key) => "$key=$params[$key]",
                 array_keys($params),
             )
         );

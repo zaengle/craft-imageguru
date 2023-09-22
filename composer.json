@@ -22,11 +22,11 @@
         }
     ],
     "require-dev": {
-        "roave/security-advisories": "dev-latest"
-        ,
         "craftcms/cms": "^4.5.0",
-        "friendsofphp/php-cs-fixer": "^3.0",
+        "craftcms/ecs": "dev-main",
         "phpstan/phpstan": "^1.4",
+        "roave/security-advisories": "dev-latest",
+        "symplify/easy-coding-standard": "^10.2",
         "vlucas/phpdotenv": "^3.0"
     },
     "autoload": {
@@ -51,7 +51,7 @@
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse",
         "check-cs": "ecs check --ansi",
-        "fix-cs": "vendor/bin/php-cs-fixer fix src --allow-risky=yes"
+        "fix-cs": "ecs check --ansi --fix"
     },
     "config": {
         "allow-plugins": {
@@ -60,6 +60,7 @@
         }
     },
     "require": {
-        "craftcms/aws-s3": "^2.0"
+        "craftcms/aws-s3": "^2.0",
+        "php": "^8.0 | ^8.1 | ^8.2"
     }
 }

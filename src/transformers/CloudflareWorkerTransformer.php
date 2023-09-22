@@ -112,7 +112,7 @@ class CloudflareWorkerTransformer extends BaseCloudflareTransformer
 
 
 
-        return rtrim($baseUrl, '/'). '/' . $path . '?' . http_build_query($transformParams);
+        return rtrim($baseUrl, '/') . '/' . $path . '?' . http_build_query($transformParams);
     }
 
     /**

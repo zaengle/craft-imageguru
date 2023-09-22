@@ -158,7 +158,7 @@ class AwsServerlessSharpTransformer extends Component implements ImageTransforme
         $edits[$format] = self::getFormatValues($format, $transform);
 
         foreach (self::MAP_TRANSFORM_RESIZE_ATTRIBUTES as $key => $value) {
-            if (! empty($transform[$key])) {
+            if (!empty($transform[$key])) {
                 $edits['resize'][$value] = $transform[$key];
             }
         }
@@ -274,7 +274,7 @@ class AwsServerlessSharpTransformer extends Component implements ImageTransforme
      */
     public static function getPosition(?string $position, ?array $focalPoint): ?string
     {
-        if (! empty($focalPoint)) {
+        if (!empty($focalPoint)) {
             $x = match (true) {
                 $focalPoint['x'] < 0.33 => 'left',
                 $focalPoint['x'] > 0.67 => 'right',
@@ -285,13 +285,13 @@ class AwsServerlessSharpTransformer extends Component implements ImageTransforme
                 $focalPoint['y'] > 0.67 => 'bottom',
                 default => 'center',
             };
-            $position = $x.'-'.$y;
+            $position = $x . '-' . $y;
         }
-        if (! empty($position)) {
+        if (!empty($position)) {
             if (preg_match('/(left|center|right)-(top|center|bottom)/', $position)) {
                 $positions = explode('-', $position);
                 $positions = array_diff($positions, ['center']);
-                if (! empty($positions) && $position !== 'center-center') {
+                if (!empty($positions) && $position !== 'center-center') {
                     return implode(' ', $positions);
                 }
             }
