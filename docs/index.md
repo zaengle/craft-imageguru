@@ -1,6 +1,6 @@
 # Introduction
 
-> Stylish off-server image transforms for #craftcms projects
+> Stylish off-server image transforms for #CraftCMS projects
 
 ## What
 
