@@ -1,4 +1,4 @@
-import CloudflareImageResizingHandler from '../CloudflareImageResizingHandler';
+import CloudflareImageResizingHandler from '../CloudflareImageResizingHandler'
 
 const handlerFactory = (ENV = {}) =>
   new CloudflareImageResizingHandler({
