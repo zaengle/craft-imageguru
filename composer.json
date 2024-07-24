@@ -21,8 +21,10 @@
             "homepage": "https://zaengle.com"
         }
     ],
+    "require": {
+        "craftcms/cms": "^4.0.0||^5.0.0"
+    },
     "require-dev": {
-        "craftcms/cms": "^4.5.0",
         "craftcms/ecs": "dev-main",
         "phpstan/phpstan": "^1.4",
         "roave/security-advisories": "dev-latest",
@@ -49,7 +51,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse",
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G --ansi",
         "check-cs": "ecs check --ansi",
         "fix-cs": "ecs check --ansi --fix"
     },
@@ -61,6 +63,6 @@
     },
     "require": {
         "craftcms/aws-s3": "^2.0",
-        "php": "^8.0 | ^8.1 | ^8.2"
+        "php": "^8.0 | ^8.1 | ^8.2 | ^8.3"
     }
 }
