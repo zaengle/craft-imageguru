@@ -2,7 +2,6 @@
     "name": "zaengle/craft-imageguru",
     "description": "Streamline your Image Transforms",
     "type": "craft-plugin",
-    "version": "1.0.0",
     "keywords": [
         "craft",
         "cms",
@@ -21,10 +20,8 @@
             "homepage": "https://zaengle.com"
         }
     ],
-    "require": {
-        "craftcms/cms": "^4.0.0||^5.0.0"
-    },
     "require-dev": {
+        "craftcms/cms": "^4.0.0||^5.0.0",
         "craftcms/ecs": "dev-main",
         "phpstan/phpstan": "^1.4",
         "roave/security-advisories": "dev-latest",

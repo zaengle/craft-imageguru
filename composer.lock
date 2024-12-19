@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d90ae19ecc81cb1171539b4d99383431",
+    "content-hash": "10ab4773f70b5ad2268f458a0fb47472",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.334.6",
+            "version": "3.336.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2b0be3aded849d3b7bb0b53ea3295c7cecdeeee7"
+                "reference": "5a62003bf183e32da038056a4b9077c27224e034"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2b0be3aded849d3b7bb0b53ea3295c7cecdeeee7",
-                "reference": "2b0be3aded849d3b7bb0b53ea3295c7cecdeeee7",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5a62003bf183e32da038056a4b9077c27224e034",
+                "reference": "5a62003bf183e32da038056a4b9077c27224e034",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.334.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.336.0"
             },
-            "time": "2024-12-13T19:18:29+00:00"
+            "time": "2024-12-18T19:04:32+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -547,16 +547,16 @@
         },
         {
             "name": "craftcms/cms",
-            "version": "5.5.6.1",
+            "version": "5.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/cms.git",
-                "reference": "a8bf00237ada556acd2b2245639d1cf54c903a02"
+                "reference": "85c87d01d9163e937debe1bf74ac53b1540802e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/cms/zipball/a8bf00237ada556acd2b2245639d1cf54c903a02",
-                "reference": "a8bf00237ada556acd2b2245639d1cf54c903a02",
+                "url": "https://api.github.com/repos/craftcms/cms/zipball/85c87d01d9163e937debe1bf74ac53b1540802e5",
+                "reference": "85c87d01d9163e937debe1bf74ac53b1540802e5",
                 "shasum": ""
             },
             "require": {
@@ -670,7 +670,7 @@
                 "rss": "https://github.com/craftcms/cms/releases.atom",
                 "source": "https://github.com/craftcms/cms"
             },
-            "time": "2024-12-11T14:14:05+00:00"
+            "time": "2024-12-17T18:09:56+00:00"
         },
         {
             "name": "craftcms/flysystem",
@@ -4794,8 +4794,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -7854,16 +7854,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.12",
+            "version": "1.12.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0"
+                "reference": "9b469068840cfa031e1deaf2fa1886d00e20680f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0",
-                "reference": "b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b469068840cfa031e1deaf2fa1886d00e20680f",
+                "reference": "9b469068840cfa031e1deaf2fa1886d00e20680f",
                 "shasum": ""
             },
             "require": {
@@ -7908,7 +7908,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-28T22:13:23+00:00"
+            "time": "2024-12-17T17:00:20+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -7916,12 +7916,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "233f7c395ac3b83e3c85aa304f3350bf8897aca5"
+                "reference": "4aa68d3ea343b9576b5fdebef1332f701a7bc994"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/233f7c395ac3b83e3c85aa304f3350bf8897aca5",
-                "reference": "233f7c395ac3b83e3c85aa304f3350bf8897aca5",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4aa68d3ea343b9576b5fdebef1332f701a7bc994",
+                "reference": "4aa68d3ea343b9576b5fdebef1332f701a7bc994",
                 "shasum": ""
             },
             "conflict": {
@@ -8031,7 +8031,7 @@
                 "contao/managed-edition": "<=1.5",
                 "corveda/phpsandbox": "<1.3.5",
                 "cosenary/instagram": "<=2.3",
-                "craftcms/cms": "<=4.12.6.1|>=5,<=5.4.7.1",
+                "craftcms/cms": "<4.13.2|>=5,<5.5.2",
                 "croogo/croogo": "<4",
                 "cuyz/valinor": "<0.12",
                 "czim/file-handling": "<1.5|>=2,<2.3",
@@ -8326,7 +8326,6 @@
                 "neos/swiftmailer": "<5.4.5",
                 "netgen/tagsbundle": ">=3.4,<3.4.11|>=4,<4.0.15",
                 "nette/application": ">=2,<2.0.19|>=2.1,<2.1.13|>=2.2,<2.2.10|>=2.3,<2.3.14|>=2.4,<2.4.16|>=3,<3.0.6",
-                "nette/database": "<=3.2.4",
                 "nette/nette": ">=2,<2.0.19|>=2.1,<2.1.13",
                 "nilsteampassnet/teampass": "<3.0.10",
                 "nonfiction/nterchange": "<4.1.1",
@@ -8509,7 +8508,7 @@
                 "snipe/snipe-it": "<=7.0.13",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
-                "spatie/browsershot": "<5.0.1",
+                "spatie/browsershot": "<5.0.2",
                 "spatie/image-optimizer": "<1.7.3",
                 "spencer14420/sp-php-email-handler": "<1",
                 "spipu/html2pdf": "<5.2.8",
@@ -8622,7 +8621,7 @@
                 "typo3fluid/fluid": ">=2,<2.0.8|>=2.1,<2.1.7|>=2.2,<2.2.4|>=2.3,<2.3.7|>=2.4,<2.4.4|>=2.5,<2.5.11|>=2.6,<2.6.10",
                 "ua-parser/uap-php": "<3.8",
                 "uasoft-indonesia/badaso": "<=2.9.7",
-                "unisharp/laravel-filemanager": "<2.6.4",
+                "unisharp/laravel-filemanager": "<2.9.1",
                 "unopim/unopim": "<0.1.5",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
@@ -8761,7 +8760,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-13T21:04:51+00:00"
+            "time": "2024-12-18T20:05:40+00:00"
         },
         {
             "name": "symplify/easy-coding-standard",
