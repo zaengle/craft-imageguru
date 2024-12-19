@@ -2,7 +2,6 @@
     "name": "zaengle/craft-imageguru",
     "description": "Streamline your Image Transforms",
     "type": "craft-plugin",
-    "version": "1.0.0",
     "keywords": [
         "craft",
         "cms",
