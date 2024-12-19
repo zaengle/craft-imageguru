@@ -1,1 +1,0 @@
-import{_ as e,c as a,o as t,a2 as r}from"./chunks/framework.BaHG-QLs.js";const p=JSON.parse('{"title":"Introduction","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),o={name:"index.md"},s=r("",15),i=[s];function n(l,d,h,u,m,f){return t(),a("div",null,i)}const g=e(o,[["render",n]]);export{p as __pageData,g as default};
