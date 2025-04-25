@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
- * Image Guru plugin for Craft CMS 4.x
+ * Image Guru plugin for Craft CMS 5.x
  *
  * @link      https://zaengle.com
  * @copyright Copyright (c) 2022 Zaengle Corp

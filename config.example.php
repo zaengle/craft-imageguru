@@ -1,6 +1,6 @@
 <?php
 /**
- * Image Guru plugin for Craft CMS 4.x
+ * Image Guru plugin for Craft CMS 5.x
  *
  * Streamline your Image Transforms
  *

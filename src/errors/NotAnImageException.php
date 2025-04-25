@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 /**
- * Image Guru plugin for Craft CMS 4.x
+ * Image Guru plugin for Craft CMS 5.x
  *
- * There's no place like home. There's no place like home. There's no place like home...
  *
  * @link      https://zaengle.com
  * @copyright Copyright (c) 2022 Zaengle Corp
