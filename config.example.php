@@ -1,4 +1,7 @@
 <?php
+
+use zaengle\imageguru\transformers\CloudflareBasicTransformer;
+
 /**
  * Image Guru plugin for Craft CMS 5.x
  *
@@ -9,13 +12,15 @@
  */
 return [
   '*' => [
+    // globally enable / disable image transforms: useful if using local images in development
+    'transformsEnabled' => true,
     /**
      * Available transformers that should be registered with Craft
      */
     'enabledTransformers' => [
       // Supply an escaped namespaced classname to use,
       // Transformers must implement craft\base\imagetransforms\ImageTransformerInterface
-      '\\zaengle\\imageguru\\transformers\\CloudflareBasicTransformer',
+        CloudflareBasicTransformer::class,
     ],
     /**
      * Configure transformers per volume, or provide a global default
@@ -28,7 +33,7 @@ return [
       '*' => [
         // Supply an escaped namespaced classname to use,
         // Transformers must implement craft\base\imagetransforms\ImageTransformerInterface
-        'transformer' => '\\zaengle\\imageguru\\transformers\\CloudflareBasicTransformer',
+        'transformer' => CloudflareBasicTransformer::class,
         // Supply the base URL to use for transforms (e.g. CDN hostname), defaults to `/`
         'transformBaseUrl' => getenv('TRANSFORM_BASE_URL'),
         // `defaultParams` will be applied to *every* transform without needing to be set in your template / Craft transform, but can be overriden by transform settings if matching kets supplied

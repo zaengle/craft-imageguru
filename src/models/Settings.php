@@ -22,6 +22,8 @@ class Settings extends Model
     // Public Properties
     // =========================================================================
 
+    public bool $transformsEnabled = true;
+
     public array $enabledTransformers = [];
     public array $volumes = [];
 

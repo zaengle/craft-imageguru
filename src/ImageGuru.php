@@ -87,6 +87,10 @@ class ImageGuru extends Plugin
     // =========================================================================
     protected function installEventHandlers(): void
     {
+        if (!$this->getSettings()?->transformsEnabled) {
+            return;
+        }
+
         // Register the transformer(s) with Craft
         Event::on(
             CraftImageTransformsService::class,
