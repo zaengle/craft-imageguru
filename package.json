@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/zaengle/craft-imageguru#readme",
   "devDependencies": {
-    "vitepress": "^1.5.0"
+    "vitepress": "^1.6.4"
   }
 }
