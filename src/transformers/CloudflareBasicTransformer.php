@@ -16,6 +16,7 @@ use craft\elements\Asset;
 use craft\errors\ImageTransformException;
 use craft\helpers\App;
 use craft\helpers\ImageTransforms as TransformHelper;
+use craft\helpers\StringHelper;
 use craft\models\ImageTransform as CraftImageTransform;
 
 use zaengle\imageguru\base\BaseCloudflareTransformer;
@@ -99,6 +100,9 @@ class CloudflareBasicTransformer extends BaseCloudflareTransformer
         if (property_exists($image->fs, 'subfolder')) {
             $folder = App::parseEnv($image->fs->subfolder);
         }
+
+        $folder = StringHelper::ensureRight($folder, '/') . App::parseEnv($image->volume->subpath);
+
         $key = ltrim($folder . $image->path, '/');
 
         $path = $this->collapseSlashes(
